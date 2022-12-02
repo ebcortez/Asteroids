@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Asteroids {
-	public class ShipMovement : MonoBehaviour {
+	public class PlayerMovement : MonoBehaviour {
 		[SerializeField] private float speed;
 		[SerializeField] private float rotationSpeed;
 

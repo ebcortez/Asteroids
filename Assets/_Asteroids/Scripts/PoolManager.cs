@@ -10,7 +10,7 @@ namespace Asteroids {
 		[SerializeField] private List<SpawnableData> spawnableDatas = new List<SpawnableData>();
 		private Transform poolManagerTransform;
 		
-		private Dictionary<SpawnableType, Queue<GameObject>> poolDictionary = new Dictionary<SpawnableType, Queue<GameObject>>();
+		private Dictionary<int, Queue<GameObject>> poolDictionary = new Dictionary<int, Queue<GameObject>>();
 
 		private void Awake() { 
 			instance = this;
@@ -18,8 +18,8 @@ namespace Asteroids {
 			poolManagerTransform = transform;
 		}
 
-		private void CreatePool(SpawnableType type) {
-			var spawnableData = spawnableDatas.Find(spawnableData => spawnableData.Type == type);
+		private void CreatePool(int id) {
+			var spawnableData = spawnableDatas.Find(spawnableData => spawnableData.ID == id);
 			if(spawnableData == null) Debug.LogException(new System.Exception("NO SPAWN DATA FOR THIS ID!"));
 			var spawnablePrefab = Instantiate(spawnableData.Prefab, poolManagerTransform);
 			spawnablePrefab.SetActive(false);
@@ -29,18 +29,18 @@ namespace Asteroids {
 			for (int i = 0; i < spawnableData.InitialPoolCount; i++) {
 				pool.Enqueue(Instantiate(spawnablePrefab, poolManagerTransform));
 			}
-			poolDictionary.Add(spawnableData.Type, pool);
+			poolDictionary.Add(spawnableData.ID, pool);
 		}
 
-		public GameObject GetObjectFromPool(SpawnableType type) {
-			if (!poolDictionary.ContainsKey(type)) {
-				CreatePool(type);
+		public GameObject GetObjectFromPool(int id) {
+			if (!poolDictionary.ContainsKey(id)) {
+				CreatePool(id);
 			}
 
-			var pooledObject = poolDictionary[type].Dequeue();
+			var pooledObject = poolDictionary[id].Dequeue();
 			if(pooledObject.activeInHierarchy) pooledObject.SetActive(false);
 			pooledObject.SetActive(true);
-			poolDictionary[type].Enqueue(pooledObject);
+			poolDictionary[id].Enqueue(pooledObject);
 
 			return pooledObject;
 		}
