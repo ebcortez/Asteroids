@@ -59,7 +59,7 @@ namespace AsteroidsGame {
 		}
 
 		public void TakeDamage() {
-			if(life > 0) {
+			if (--life > 0) {
 				myGameObject.SetActive(false);
 
 				var asteroid1 = PoolManager.Instance.GetObjectFromPool(1).GetComponent<Asteroid>();
@@ -68,7 +68,7 @@ namespace AsteroidsGame {
 				asteroid1.Transform.SetPositionAndRotation(Transform.position, Quaternion.identity);
 				asteroid2.Transform.SetPositionAndRotation(Transform.position, Quaternion.identity);
 
-				asteroid1.SetLife(--life);
+				asteroid1.SetLife(life);
 				asteroid2.SetLife(life);
 
 				asteroid1.Transform.SetPositionAndRotation(Transform.position + (new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * 2), Quaternion.identity);
@@ -77,6 +77,7 @@ namespace AsteroidsGame {
 				asteroid1.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * deathForce, ForceMode.VelocityChange);
 				asteroid2.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * deathForce, ForceMode.VelocityChange);
 			} else {
+				GameManager.Instance.AddScore(1);
 				myGameObject.SetActive(false);
 			}
 		}

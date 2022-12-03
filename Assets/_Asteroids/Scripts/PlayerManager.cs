@@ -16,10 +16,17 @@ namespace AsteroidsGame {
 		public float DefaultFireRate => defaultFireRate;
 		public float BurstAngle => burstAngle;
 
+		public UnityEngine.Events.UnityEvent<int> healthChanged;
+
 		public Rigidbody ShipRigidbody { get; private set; }
 
 		private void Awake() {
 			ShipRigidbody = GetComponent<Rigidbody>();
+			UpdateHealth();
+		}
+
+		public void UpdateHealth() {
+			healthChanged?.Invoke(health);
 		}
 
 		public void TakeDamage() {
@@ -30,6 +37,8 @@ namespace AsteroidsGame {
 			} else {
 				gameObject.SetActive(false);
 			}
+
+			UpdateHealth();
 		}
 	}
 }
