@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 295db3d0029c41d47874978d7aa18f7e, type: 3}
+  m_Name: CrescentPowerUp
+  m_EditorClassIdentifier: 
+  id: 3
+  type: 2
+  prefab: {fileID: 3183763428964027739, guid: 273cd0d6d036e794d96ffc0c10cafca6, type: 3}
+  initialPoolCount: 10

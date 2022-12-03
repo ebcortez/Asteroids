@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AsteroidsGame {
-	[CreateAssetMenu(fileName = "New Spawn Data", menuName = "Asteroids/Create Spawnable Data")]
+	[CreateAssetMenu(fileName = "New Pool Object Data", menuName = "Asteroids/Create Spawnable Data")]
 	public class PoolObjectData : ScriptableObject {
 		[SerializeField] private int id;
 		[SerializeField] private PooledType type;

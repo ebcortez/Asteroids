@@ -4,33 +4,72 @@ using UnityEngine;
 
 namespace AsteroidsGame {
 	public class PlayerManager : MonoBehaviour {
-		[SerializeField] private int health = 3;
-		[SerializeField] private float speed = 500;
-		[SerializeField] private float rotationSpeed = 250;
-		[SerializeField, Range(0.25f, 1f)] private float defaultFireRate = 0.25f;
-		[SerializeField, Range(30, 60)] private float burstAngle = 30f;
+		[SerializeField] private Renderer playerRenderer;
 
-		public int Health => health;
-		public float Speed => speed;
-		public float RotationSpeed => rotationSpeed;
-		public float DefaultFireRate => defaultFireRate;
-		public float BurstAngle => burstAngle;
+		private Color defaultColor;
+		private int shieldHealth;
+
+		public int CurrentHealth { get; private set; }
+		public int CrescentBulletAmmo { get; set; }
 
 		public UnityEngine.Events.UnityEvent<int> healthChanged;
+		public UnityEngine.Events.UnityEvent<int> crescentBulletAmmoChanged;
+		public UnityEngine.Events.UnityEvent<int> shieldHealthChanged;
 
 		public Rigidbody ShipRigidbody { get; private set; }
 
 		private void Awake() {
 			ShipRigidbody = GetComponent<Rigidbody>();
-			UpdateHealth();
+			defaultColor = playerRenderer.material.color;
+			
+			CurrentHealth = GameManager.Instance.GameplaySettings.PlayerHealth;
+
+			crescentBulletAmmoChanged.AddListener(ammo => {
+				if(ammo <= 0) {
+					ChangeColor(defaultColor);
+				}
+			});
+
+			shieldHealthChanged.AddListener(shield => {
+				if (shield <= 0) {
+					ChangeColor(defaultColor);
+				}
+			});
+
+			healthChanged?.Invoke(CurrentHealth);
+			shieldHealthChanged?.Invoke(shieldHealth);
+			crescentBulletAmmoChanged?.Invoke(CrescentBulletAmmo);
+
 		}
 
-		public void UpdateHealth() {
-			healthChanged?.Invoke(health);
+		public void ActivatePowerUp(PowerUp powerUp) {
+			switch (powerUp.PowerUpData.PowerUpType) {
+				case PowerUpType.CrescentBullet:
+					CrescentBulletAmmo = powerUp.PowerUpData.CrescentBulletAmmo;
+					shieldHealth = 0;
+					shieldHealthChanged?.Invoke(shieldHealth);
+					crescentBulletAmmoChanged?.Invoke(CrescentBulletAmmo);
+					ChangeColor(powerUp.PowerUpData.PlayerColorEffect);
+					break;
+				case PowerUpType.Shield:
+					shieldHealth = powerUp.PowerUpData.ShieldAmount;
+					CrescentBulletAmmo = 0;
+					shieldHealthChanged?.Invoke(shieldHealth);
+					crescentBulletAmmoChanged?.Invoke(CrescentBulletAmmo);
+					ChangeColor(powerUp.PowerUpData.PlayerColorEffect);
+					break;
+			}
+			powerUp.gameObject.SetActive(false);
 		}
 
 		public void TakeDamage() {
-			if(--health > 0) {
+			if (shieldHealth > 0) {
+				shieldHealth--;
+				shieldHealthChanged?.Invoke(shieldHealth);
+				ChangeColor(defaultColor);
+				return;
+			}
+			if (--CurrentHealth > 0) {
 				ShipRigidbody.Sleep();
 				ShipRigidbody.MoveRotation(Quaternion.identity);
 				ShipRigidbody.MovePosition(Vector3.zero);
@@ -38,7 +77,11 @@ namespace AsteroidsGame {
 				gameObject.SetActive(false);
 			}
 
-			UpdateHealth();
+			healthChanged?.Invoke(CurrentHealth);
+		}
+
+		public void ChangeColor(Color color) {
+			playerRenderer.material.color = color;
 		}
 	}
 }

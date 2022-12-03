@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace AsteroidsGame {
 	public class Asteroid : MonoBehaviour {
-		[SerializeField] private int defaultLife = 4;
-		[SerializeField, Range(2.5f, 5f)] private float deathForce;
 		private int life;
 		private GameObject myGameObject;
 		private IEnumerator CO_WaitToDisable;
@@ -50,7 +48,7 @@ namespace AsteroidsGame {
 			StartCoroutine(CO_WaitToDisable);
 		}
 
-		public void SetDefaultLife() => SetLife(Random.Range(1, defaultLife+1));
+		public void SetDefaultLife() => SetLife(Random.Range(1, GameManager.Instance.GameplaySettings.AsteroidDefaultLife+1));
 
 		public void SetLife(int life) {
 			this.life = life;
@@ -74,8 +72,8 @@ namespace AsteroidsGame {
 				asteroid1.Transform.SetPositionAndRotation(Transform.position + (new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * 2), Quaternion.identity);
 				asteroid2.Transform.SetPositionAndRotation(Transform.position + (new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * 2), Quaternion.identity);
 
-				asteroid1.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * deathForce, ForceMode.VelocityChange);
-				asteroid2.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * deathForce, ForceMode.VelocityChange);
+				asteroid1.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * GameManager.Instance.GameplaySettings.AsteroidDestroyForce, ForceMode.VelocityChange);
+				asteroid2.Rigidbody.AddRelativeForce(new Vector3(Random.onUnitSphere.x, 0, Random.onUnitSphere.z) * GameManager.Instance.GameplaySettings.AsteroidDestroyForce, ForceMode.VelocityChange);
 			} else {
 				GameManager.Instance.AddScore(1);
 				myGameObject.SetActive(false);

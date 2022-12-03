@@ -4,35 +4,23 @@ using UnityEngine;
 
 namespace AsteroidsGame {
 	public class AsteroidSpawner : MonoBehaviour {
-		[SerializeField] private float defaultSpawnRate = 2.5f, minimumSpawnRate = 1f;
-		[SerializeField, Range(1, 100)] private float spawnRateDecayRate = 50;
-		[SerializeField, Range(5, 15)] private int minimumAsteroidForce;
-		[SerializeField, Range(5, 15)] private int maximumAsteroidForce;
-		private float spawnRate;
+		private float spawnRate, defaultSpawnRate;
 		private Transform[] spawnPointTransforms;
-		private Vector2 minBounds, maxBounds;
 		private Transform playerTransform;
-
-		private void Awake() {
-			if(minimumAsteroidForce > maximumAsteroidForce) minimumAsteroidForce = maximumAsteroidForce;
-		}
 
 		private void Start() {
 			playerTransform = FindObjectOfType<PlayerManager>().transform;
-
-			var screenBounds = GameManager.Instance.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, Screen.height));
-			minBounds = new Vector2(-screenBounds.x, screenBounds.z);
-			maxBounds = new Vector2(screenBounds.x, -screenBounds.z);
+			defaultSpawnRate = GameManager.Instance.GameplaySettings.AsteroidDefaultSpawnRate;
 
 			var spawnPoints = new Vector2[8];
-			spawnPoints[0] = new Vector2(minBounds.x, minBounds.y) * 1.25f;
-			spawnPoints[1] = new Vector2(maxBounds.x, minBounds.y) * 1.25f;
-			spawnPoints[2] = new Vector2(minBounds.x, maxBounds.y) * 1.25f;
-			spawnPoints[3] = new Vector2(maxBounds.x, maxBounds.y) * 1.25f;
-			spawnPoints[4] = new Vector2(0, minBounds.y) * 1.25f;
-			spawnPoints[5] = new Vector2(minBounds.x, 0) * 1.25f;
-			spawnPoints[6] = new Vector2(0, maxBounds.y) * 1.25f;
-			spawnPoints[7] = new Vector2(maxBounds.x, 0) * 1.25f;
+			spawnPoints[0] = new Vector2(GameManager.Instance.MinBounds.x, GameManager.Instance.MinBounds.y) * 1.25f;
+			spawnPoints[1] = new Vector2(GameManager.Instance.MaxBounds.x, GameManager.Instance.MinBounds.y) * 1.25f;
+			spawnPoints[2] = new Vector2(GameManager.Instance.MinBounds.x, GameManager.Instance.MaxBounds.y) * 1.25f;
+			spawnPoints[3] = new Vector2(GameManager.Instance.MaxBounds.x, GameManager.Instance.MaxBounds.y) * 1.25f;
+			spawnPoints[4] = new Vector2(0, GameManager.Instance.MinBounds.y) * 1.25f;
+			spawnPoints[5] = new Vector2(GameManager.Instance.MinBounds.x, 0) * 1.25f;
+			spawnPoints[6] = new Vector2(0, GameManager.Instance.MaxBounds.y) * 1.25f;
+			spawnPoints[7] = new Vector2(GameManager.Instance.MaxBounds.x, 0) * 1.25f;
 
 			spawnPointTransforms = new Transform[8];
 			for (int i = 0; i < spawnPoints.Length; i++) {
@@ -51,16 +39,16 @@ namespace AsteroidsGame {
 				asteroid.SetDefaultLife();
 				asteroid.Transform.SetPositionAndRotation(spawnPointTransform.position, spawnPointTransform.rotation);
 				asteroid.Transform.LookAt(new Vector3(playerTransform.position.x, 0, playerTransform.position.z) + Random.insideUnitSphere * 2);
-				asteroid.Rigidbody.AddRelativeForce(asteroid.Transform.forward * Random.Range(minimumAsteroidForce, maximumAsteroidForce), ForceMode.VelocityChange);
+				asteroid.Rigidbody.AddRelativeForce(asteroid.Transform.forward * Random.Range(GameManager.Instance.GameplaySettings.AsteroidMinimumSpawnForce, GameManager.Instance.GameplaySettings.AsteroidMaximumSpawnForce), ForceMode.VelocityChange);
 				spawnRate = defaultSpawnRate;
 			} else {
 				spawnRate -= Time.deltaTime;
 			}
 
-			if(defaultSpawnRate > minimumSpawnRate) {
-				defaultSpawnRate -= Time.deltaTime * (spawnRateDecayRate / 100);
+			if(defaultSpawnRate > GameManager.Instance.GameplaySettings.AsteroidMinimumSpawnRate) {
+				defaultSpawnRate -= Time.deltaTime * (GameManager.Instance.GameplaySettings.AsteroidSpawnRateDecayRate / 100);
 			} else {
-				defaultSpawnRate = minimumSpawnRate;
+				defaultSpawnRate = GameManager.Instance.GameplaySettings.AsteroidMinimumSpawnRate;
 			}
 		}
 	}

@@ -14,8 +14,12 @@ namespace AsteroidsGame {
 		private void Update() {
 			if (isFired) {
 				if(fireRate <= 0) {
-					fireRate = playerManager.DefaultFireRate;
-					NormalFire();
+					fireRate = GameManager.Instance.GameplaySettings.PlayerDefaultFireRate;
+					if (playerManager.CrescentBulletAmmo > 0) {
+						playerManager.CrescentBulletAmmo--;
+						playerManager.crescentBulletAmmoChanged?.Invoke(playerManager.CrescentBulletAmmo);
+						CrescentFire();
+					} else NormalFire();
 				}
 			}
 			if(fireRate > 0) {
@@ -30,8 +34,8 @@ namespace AsteroidsGame {
 
 
 			bullet1.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward));
-			bullet2.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y + playerManager.BurstAngle, 0));
-			bullet3.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y - playerManager.BurstAngle, 0));
+			bullet2.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y + GameManager.Instance.GameplaySettings.PlayerBurstAngle, 0));
+			bullet3.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y - GameManager.Instance.GameplaySettings.PlayerBurstAngle, 0));
 
 			var bulletRigidbody = bullet1.Rigidbody;
 			bulletRigidbody.AddRelativeForce(bullet1.Transform.forward * bullet1.Speed, ForceMode.Impulse);
@@ -41,6 +45,15 @@ namespace AsteroidsGame {
 
 			bulletRigidbody = bullet3.Rigidbody;
 			bulletRigidbody.AddRelativeForce(bullet3.Transform.forward * bullet3.Speed, ForceMode.Impulse);
+		}
+
+		public void CrescentFire() {
+			var bullet1 = PoolManager.Instance.GetObjectFromPool(2).GetComponent<Bullet>();
+
+			bullet1.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward));
+
+			var bulletRigidbody = bullet1.Rigidbody;
+			bulletRigidbody.AddRelativeForce(bullet1.Transform.forward * bullet1.Speed, ForceMode.Impulse);
 		}
 
 		public void FireInput(InputAction.CallbackContext callbackContext) {

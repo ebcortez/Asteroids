@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AsteroidsGame {
 	public class Bullet : MonoBehaviour {
 		[SerializeField] private float speed;
+		[SerializeField] private bool disableHit;
 
 		private GameObject myGameObject;
 
@@ -25,7 +26,7 @@ namespace AsteroidsGame {
 		}
 
 		private void OnTriggerEnter(Collider other) {
-			myGameObject.SetActive(false);
+			if(disableHit) myGameObject.SetActive(false);
 		}
 
 		private void OnBecameInvisible() {
