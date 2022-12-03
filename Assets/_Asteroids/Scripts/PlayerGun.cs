@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Asteroids {
+namespace AsteroidsGame {
 	public class PlayerGun : MonoBehaviour {
+		[SerializeField] private PlayerManager playerManager;
 		[SerializeField] private Transform muzzle;
-		[SerializeField] private float defaultFireRate = 0.25f;
-		private float fireRate;
 
+		private float fireRate;
 		private bool isFired;
 
 		private void Update() {
 			if (isFired) {
 				if(fireRate <= 0) {
-					fireRate = defaultFireRate;
+					fireRate = playerManager.DefaultFireRate;
 					NormalFire();
 				}
 			}
@@ -28,11 +28,10 @@ namespace Asteroids {
 			var bullet2 = PoolManager.Instance.GetObjectFromPool(0).GetComponent<Bullet>();
 			var bullet3 = PoolManager.Instance.GetObjectFromPool(0).GetComponent<Bullet>();
 
-			var burstAngle = 30;
 
 			bullet1.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward));
-			bullet2.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y + burstAngle, 0));
-			bullet3.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y - burstAngle, 0));
+			bullet2.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y + playerManager.BurstAngle, 0));
+			bullet3.Transform.SetPositionAndRotation(muzzle.position, Quaternion.LookRotation(muzzle.forward) * Quaternion.Euler(0, muzzle.localEulerAngles.y - playerManager.BurstAngle, 0));
 
 			var bulletRigidbody = bullet1.Rigidbody;
 			bulletRigidbody.AddRelativeForce(bullet1.Transform.forward * bullet1.Speed, ForceMode.Impulse);

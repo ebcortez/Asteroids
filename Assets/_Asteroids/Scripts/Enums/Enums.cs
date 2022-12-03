@@ -1,4 +1,4 @@
-public enum SpawnableType {
+public enum PooledType {
 	Bullet,
 	Asteroid
 }

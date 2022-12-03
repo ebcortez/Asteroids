@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnableDatas:
   - {fileID: 11400000, guid: ba5353cf21ca9b44c9542bafbf9c3c66, type: 2}
+  - {fileID: 11400000, guid: eb39de33a03ec064888a2d5974b333b2, type: 2}
 --- !u!4 &75155834
 Transform:
   m_ObjectHideFlags: 0
@@ -163,6 +164,49 @@ Transform:
   m_GameObject: {fileID: 75155832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.051668167, y: -0.06384289, z: 1.4772956}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &154050381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 154050383}
+  - component: {fileID: 154050382}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &154050382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154050381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3741d51f5567be48b9dd43bcbeab005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &154050383
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154050381}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -211,6 +255,7 @@ GameObject:
   - component: {fileID: 445716773}
   - component: {fileID: 445716772}
   - component: {fileID: 445716778}
+  - component: {fileID: 445716779}
   - component: {fileID: 445716777}
   - component: {fileID: 445716776}
   m_Layer: 6
@@ -295,7 +340,7 @@ Transform:
   m_Children:
   - {fileID: 983329170}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &445716776
 MonoBehaviour:
@@ -371,8 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e9d852c0a6d00d43bd4cf6c9abb5ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 500
-  rotationSpeed: 250
+  playerManager: {fileID: 445716779}
 --- !u!54 &445716778
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -383,12 +427,29 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0.25
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
+--- !u!114 &445716779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445716771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a97aa56e800c7c48b0a217664dd862b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 3
+  speed: 500
+  rotationSpeed: 250
+  defaultFireRate: 0.5
+  burstAngle: 30
 --- !u!1 &983329169
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,8 +545,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bba3bb974ccb204e96df87a680ab49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerManager: {fileID: 445716779}
   muzzle: {fileID: 372641000}
-  defaultFireRate: 1
 --- !u!1 &1347630175
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +640,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
+--- !u!1 &1371461461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371461463}
+  - component: {fileID: 1371461462}
+  m_Layer: 0
+  m_Name: AsteroidSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1371461462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371461461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4620603624fc1ee44bc721f42be16645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpawnRate: 5
+  minimumSpawnRate: 1
+  spawnRateDecayRate: 5
+  minimumAsteroidForce: 5
+  maximumAsteroidForce: 10
+--- !u!4 &1371461463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371461461}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1980162915
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,8 +740,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60.00444
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

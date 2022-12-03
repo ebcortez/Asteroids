@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Asteroids {
+namespace AsteroidsGame {
 	public class PoolManager : MonoBehaviour {
 		private static PoolManager instance;
 		public static PoolManager Instance => instance;
 
-		[SerializeField] private List<SpawnableData> spawnableDatas = new List<SpawnableData>();
+		[SerializeField] private List<PoolObjectData> spawnableDatas = new List<PoolObjectData>();
 		private Transform poolManagerTransform;
 		
 		private Dictionary<int, Queue<GameObject>> poolDictionary = new Dictionary<int, Queue<GameObject>>();
